@@ -1,28 +1,42 @@
-// .example {
-//   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-//     Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-//   line-height: 1.5;
-//   background-color: #fff;
-//   color: #2f2f37;
-//   max-width: 960px;
-//   padding: 16px;
-// }
-
-// .example code {
+// body {
 //   font-family: monospace;
 //   font-size: 16px;
 //   font-weight: 700;
+// }
+// .search-form {
 //   background-color: #ff6b0a;
 //   color: #fff;
-//   padding: 2px 6px;
-//   border-radius: 2px;
+//   padding: 5px 10px;
 // }
-
-// .example .background {
-//   height: 240px;
-//   // ❗️❗️❗️ The path to images from a SASS file
-//   // is always the same as from the css folder.
-//   background-image: url('../images/logo.png');
-//   background-size: cover;
-//   background-position: center;
+// .search-btn {
+//   wight: 300px;
+//   height: 30px;
+//   background-color: #faf9f8;
+//   color: #ff6b0a;
+//   padding: 5px 10px;
+//   border-radius: 10px;
+//   margin: 50px auto;
+//   display: flex;
+//   justify-content: center;
+// }
+// .search-input {
+//   background-color: #faf9f8;
+//   color: #ff6b0a;
+//   padding: 5px 10px;
+//   border-radius: 10px;
+//   margin: 50px auto;
+//   display: flex;
+//   justify-content: center;
+// }
+// .gallery {
+// }
+// .load-more {
+//   wight: 250px;
+//   height: 50px;
+//   background-color: #ff6b0a;
+//   color: #fff;
+//   padding: 5px 10px;
+//   border-radius: 10px;
+//   margin: 50px auto;
+//   display: block;
 // }

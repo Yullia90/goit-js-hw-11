@@ -7,3 +7,5 @@ export default async function fetchPhotos(query, page) {
   const URL = `${ENDPOINT}/?key=${KEY}&q=${query}&${searchOptions}&page=${page}&per_page=40`;
   return axios.get(URL);
 }
+//
+//

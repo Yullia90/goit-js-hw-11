@@ -34,36 +34,50 @@ paginatioBtnEl.addEventListener('click', onPaginationBtnClick);
 let searchQuery = '';
 let numberOfPage = 1;
 //============звертаємось до форми и значення в ній==================
-function onSubmit() {
+async function onSubmit() {
   event.preventDefault();
   addVisibleClsToPaginationBtn();
   paginatioBtnEl.textContent = 'Loading';
   submitBtn.disabled = true;
   numberOfPage = 1;
 
-  fetchPhotos(searchQuery, numberOfPage)
-    .then(response => {
-      const photos = response.data.hits;
-      const totalHits = response.data.totalHits;
-      totalMatches = photos.length;
-      if (photos.length === 0) {
-        removeVisibleClsOfPaginationBtn();
-        Notiflix.Notify.failure(
-          'Sorry, there are no images matching your search query. Please try again.'
-        );
-      }
-      if (photos.length !== 0) {
-        Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
-      }
-      return createPhotoCard(photos);
-    })
-    .then(markup => {
-      updateGaleryMarkup(markup);
-      if (markup) paginatioBtnEl.textContent = 'Load more';
-    })
-    .catch(error => console.log(error))
-    .finally(() => gallery.refresh());
+  if (!searchQuery.trim()) {
+    // якщо рядок пустий або містить тільки пробіли
+    Notiflix.Notify.warning('Please enter a valid search query.');
+    return; // виходимо з функції, якщо рядок порожній
+  }
+  try {
+    const response = await fetchPhotos(searchQuery, numberOfPage);
+    const photos = response.data.hits;
+    const totalHits = response.data.totalHits;
+    totalMatches = photos.length;
+    if (photos.length === 0) {
+      removeVisibleClsOfPaginationBtn();
+      Notiflix.Notify.failure(
+        'Sorry, there are no images matching your search query. Please try again.'
+      );
+    }
+
+    if (photos.length !== 0) {
+      Notiflix.Notify.success(`Hooray! We found ${totalHits} images.`);
+    }
+
+    const markup = await createPhotoCard(photos);
+    updateGaleryMarkup(markup);
+
+    if (markup) {
+      paginatioBtnEl.textContent = 'Load more';
+    }
+    // Перевірка, якщо картинок менше, ніж 40 на сторінці
+    if (photos.length < 40) {
+      removeVisibleClsOfPaginationBtn();
+    }
+    gallery.refresh();
+  } catch (error) {
+    console.log(error);
+  }
 }
+
 //=======додаємо та прибираємо клас на кнопку
 function addVisibleClsToPaginationBtn() {
   paginatioBtnEl.classList.add('visible');
@@ -85,30 +99,31 @@ function onInput(event) {
 
 let totalMatches = 0;
 //===Пагінація
-function onPaginationBtnClick(event) {
+async function onPaginationBtnClick(event) {
   numberOfPage += 1;
   paginatioBtnEl.disabled = true;
-  fetchPhotos(searchQuery, numberOfPage)
-    .then(response => {
-      const photos = response.data.hits;
-      const totalHits = response.data.totalHits;
-      totalMatches += photos.length;
-      if (totalMatches >= totalHits || totalMatches === 0) {
-        Notiflix.Notify.warning(
-          "We're sorry, but you've reached the end of search results."
-        );
-        removeVisibleClsOfPaginationBtn();
-      }
-      return photos;
-    })
-    .then(photos => createPhotoCard(photos))
-    .then(markup => {
-      addMarkupToGalery(markup);
-      paginatioBtnEl.disabled = false;
-    })
-    .catch(error => alert('Whoops, something wrong((( Please, try again)'))
-    .finally(() => gallery.refresh());
+
+  try {
+    const response = await fetchPhotos(searchQuery, numberOfPage);
+    const photos = response.data.hits;
+    const totalHits = response.data.totalHits;
+    totalMatches += photos.length;
+    if (totalMatches >= totalHits || totalMatches === 0) {
+      Notiflix.Notify.warning(
+        "We're sorry, but you've reached the end of search results."
+      );
+      removeVisibleClsOfPaginationBtn();
+    }
+
+    const markup = await createPhotoCard(photos);
+    addMarkupToGalery(markup);
+    paginatioBtnEl.disabled = false;
+    gallery.refresh();
+  } catch (error) {
+    alert('Whoops, something wrong((( Please, try again');
+  }
 }
+
 //=========додаємо сторінку========
 function updateGaleryMarkup(markup) {
   photoGalery.innerHTML = markup;
